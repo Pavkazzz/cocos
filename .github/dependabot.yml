@@ -7,15 +7,10 @@ version: 2
 updates:
   # Maintain dependencies for Go
   - package-ecosystem: "gomod"
-    directory: "/"
+    directory: "/backand"
     schedule:
       interval: "weekly"
 
-  # Maintain dependencies for build tools
-  - package-ecosystem: "gomod"
-    directory: "/tools"
-    schedule:
-      interval: "weekly"
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
