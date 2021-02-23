@@ -1,11 +1,11 @@
 # Go Repository Template
 
-[![GitHub Release](https://img.shields.io/github/v/release/golang-templates/seed)](https://github.com/golang-templates/seed/releases)
-[![Go Reference](https://pkg.go.dev/badge/github.com/golang-templates/seed.svg)](https://pkg.go.dev/github.com/golang-templates/seed)
-[![go.mod](https://img.shields.io/github/go-mod/go-version/golang-templates/seed)](go.mod)
-[![Build Status](https://img.shields.io/github/workflow/status/golang-templates/seed/build)](https://github.com/golang-templates/seed/actions?query=workflow%3Abuild+branch%3Amaster)
-[![Go Report Card](https://goreportcard.com/badge/github.com/golang-templates/seed)](https://goreportcard.com/report/github.com/golang-templates/seed)
-[![Codecov](https://codecov.io/gh/golang-templates/seed/branch/master/graph/badge.svg)](https://codecov.io/gh/golang-templates/seed)
+[![GitHub Release](https://img.shields.io/github/v/release/pavkazzz/cocos)](https://github.com/pavkazzz/cocos/releases)
+[![Go Reference](https://pkg.go.dev/badge/github.com/pavkazzz/cocos.svg)](https://pkg.go.dev/github.com/pavkazzz/cocos)
+[![go.mod](https://img.shields.io/github/go-mod/go-version/pavkazzz/cocos)](go.mod)
+[![Build Status](https://img.shields.io/github/workflow/status/pavkazzz/cocos/build)](https://github.com/pavkazzz/cocos/actions?query=workflow%3Abuild+branch%3Amaster)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pavkazzz/cocos)](https://goreportcard.com/report/github.com/pavkazzz/cocos)
+[![Codecov](https://codecov.io/gh/pavkazzz/cocos/branch/master/graph/badge.svg)](https://codecov.io/gh/pavkazzz/cocos)
 
 This is a GitHub repository template for Go. It has been created for ease-of-use for anyone who wants to:
 
@@ -33,7 +33,7 @@ It includes:
 
 1. Sign up on [Codecov](https://codecov.io/) and configure [Codecov GitHub Application](https://github.com/apps/codecov) for all repositories.
 1. Click the `Use this template` button (alt. clone or download this repository).
-1. Replace all occurences of `golang-templates/seed` to `your_org/repo_name` in all files.
+1. Replace all occurences of `pavkazzz/cocos` to `your_org/repo_name` in all files.
 1. Rename folder `cmd/seed` to `cmd/app_name` and update [.goreleaser.yml](.goreleaser.yml) accordingly.
 1. Update [LICENSE](LICENSE) and [README.md](README.md).
 
