@@ -8,29 +8,25 @@ import (
 	"syscall"
 
 	log "github.com/go-pkgz/lgr"
-	"github.com/umputun/go-flags"
-
 	"github.com/pavkazzz/cocos/backend/app/cmd"
+	"github.com/umputun/go-flags"
 )
 
 // Opts with all cli commands and flags
 type Opts struct {
-	ServerCmd    cmd.ServerCommand `command:"server"`
-	Dbg          bool              `long:"dbg" env:"DEBUG" description:"debug mode"`
-	SharedSecret string            `long:"secret" env:"SECRET" required:"true" description:"shared secret key"`
+	ServerCmd cmd.ServerCommand `command:"server"`
+	Dbg       bool              `long:"dbg" env:"DEBUG" description:"debug mode"`
 }
 
 var revision = "unknown"
 
 func main() {
-
 	fmt.Printf("cocos %s\n", revision)
-	return
 
 	var opts Opts
 	p := flags.NewParser(&opts, flags.Default)
 	p.CommandHandler = func(c flags.Commander, args []string) error {
-		setupLog(true)
+		setupLog(opts.Dbg)
 
 		err := c.Execute(args)
 		if err != nil {

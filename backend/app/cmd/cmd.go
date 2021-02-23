@@ -1,20 +1,10 @@
 package cmd
 
 import (
-	"log"
 	"os"
 
 	"github.com/pkg/errors"
 )
-
-// resetEnv clears sensitive env vars
-func resetEnv(envs ...string) {
-	for _, env := range envs {
-		if err := os.Unsetenv(env); err != nil {
-			log.Printf("[WARN] can't unset env %s, %s", env, err)
-		}
-	}
-}
 
 // mkdir -p for all dirs
 func makeDirs(dirs ...string) error {

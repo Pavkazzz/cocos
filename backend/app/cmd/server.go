@@ -3,12 +3,12 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	log "github.com/go-pkgz/lgr"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 
@@ -24,7 +24,6 @@ type ServerCommand struct {
 	Port           int    `long:"port" env:"APP_PORT" default:"8080" description:"port"`
 	BackupLocation string `long:"backup" env:"BACKUP_PATH" default:"./var/backup" description:"backups location"`
 	MaxBackupFiles int    `long:"max-back" env:"MAX_BACKUP_FILES" default:"10" description:"max backups to keep"`
-	SharedSecret   string `long:"secret" env:"SECRET" required:"true" description:"shared secret key"`
 }
 
 // StoreGroup defines options group for store params
@@ -35,12 +34,10 @@ type StoreGroup struct {
 	} `group:"bolt" namespace:"bolt" env-namespace:"BOLT"`
 }
 
-// serverApp holds all active objects
+// // serverApp holds all active objects
 type serverApp struct {
 	*ServerCommand
-	restSrv *api.Rest
-	// dataService *service.DataStore
-	// authenticator *auth.Service
+	restSrv    *api.Rest
 	terminated chan struct{}
 }
 
@@ -84,11 +81,15 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	}
 
 	dataService := &service.DataStore{Engine: storeEngine}
+	rest := api.Rest{
+		Version:     "0.0.1",
+		DataService: dataService,
+	}
+
 	return &serverApp{
-		restSrv: &api.Rest{
-			Version:     "0.0.1",
-			DataService: dataService,
-		},
+		ServerCommand: s,
+		restSrv:       &rest,
+		terminated:    make(chan struct{}),
 	}, nil
 }
 
@@ -99,7 +100,7 @@ func (s *ServerCommand) makeDataStore() (result engine.Interface, err error) {
 	if err = makeDirs(s.Store.Bolt.Path); err != nil {
 		return nil, errors.Wrap(err, "failed to create bolt store")
 	}
-	sites := engine.BoltSite{FileName: fmt.Sprintf("backup/%s.db", s.Store.Bolt.Path)}
+	sites := engine.BoltSite{FileName: fmt.Sprintf("%s.db", s.Store.Bolt.Path)}
 	return engine.NewBoltDB(bolt.Options{Timeout: s.Store.Bolt.Timeout}, sites)
 }
 
@@ -112,22 +113,13 @@ func (a *serverApp) run(ctx context.Context) error {
 		a.restSrv.Shutdown()
 	}()
 
-	// a.activateBackup(ctx) // runs in goroutine for each site
-
 	a.restSrv.Run(a.Port)
 
 	close(a.terminated)
 	return nil
 }
 
-// activateBackup runs background backups for each site
-// func (a *serverApp) activateBackup(ctx context.Context) {
-// 	backup := migrator.AutoBackup{
-// 		Exporter:       a.exporter,
-// 		BackupLocation: a.BackupLocation,
-// 		SiteID:         siteID,
-// 		KeepMax:        a.MaxBackupFiles,
-// 		Duration:       24 * time.Hour,
-// 	}
-// 	go backup.Do(ctx)
-// }
+// Wait for application completion (termination)
+func (a *serverApp) Wait() {
+	<-a.terminated
+}

@@ -62,7 +62,7 @@ func (s *Rest) controllerGroups() public {
 func (s *Rest) routes() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.Throttle(1000), middleware.RealIP, Recoverer(log.Default()))
-	router.Use(AppInfo("remark42", "umputun", s.Version), Ping)
+	router.Use(AppInfo("cocos", "pavkazzz", s.Version), Ping)
 
 	ipFn := func(ip string) string { return store.HashValue(ip, s.SharedSecret)[:12] } // logger uses it for anonymization
 	logInfoWithBody := logger.New(logger.Log(log.Default()), logger.WithBody, logger.IPfn(ipFn), logger.Prefix("[INFO]")).Handler
@@ -115,7 +115,6 @@ func (s *Rest) makeHTTPServer(port int, router http.Handler) *http.Server {
 		Addr:              fmt.Sprintf(":%d", port),
 		Handler:           router,
 		ReadHeaderTimeout: 5 * time.Second,
-		// WriteTimeout:      120 * time.Second, // TODO: such a long timeout needed for blocking export (backup) request
-		IdleTimeout: 30 * time.Second,
+		IdleTimeout:       30 * time.Second,
 	}
 }

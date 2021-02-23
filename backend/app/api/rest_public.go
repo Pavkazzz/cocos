@@ -35,7 +35,7 @@ func (p *public) createIngredientsCtrl(w http.ResponseWriter, r *http.Request) {
 
 	ingredient := store.Ingredient{}
 	if err := render.DecodeJSON(http.MaxBytesReader(w, r.Body, hardBodyLimit), &ingredient); err != nil {
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "can't bind comment", rest.ErrDecode)
+		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "can't create ingredient", rest.ErrDecode)
 		return
 	}
 
@@ -46,14 +46,14 @@ func (p *public) createIngredientsCtrl(w http.ResponseWriter, r *http.Request) {
 
 	id, err := p.dataService.CreateIngredients(ingredient)
 	if err != nil {
-		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't save comment", rest.ErrInternal)
+		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't save ingredient", rest.ErrInternal)
 		return
 	}
 
-	// dataService modifies comment
+	// dataService modifies ingredient
 	finalIngredient, err := p.dataService.GetIngredient(id)
 	if err != nil {
-		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't load created comment", rest.ErrInternal)
+		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't load created ingredient", rest.ErrInternal)
 		return
 	}
 	log.Printf("[DEBUG] created commend %+v", finalIngredient)
