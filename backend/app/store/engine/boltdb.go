@@ -101,13 +101,24 @@ func (b *BoltDB) UpdateIngredients(ingredient store.Ingredient) error {
 }
 
 func (b *BoltDB) GetIngredient(ingredientID string) (store.Ingredient, error) {
-	// TODO
-	return store.Ingredient{}, nil
+	ingredient := store.Ingredient{}
+	err := b.db.View(func(tx *bolt.Tx) error {
+		ingredientsBkt := tx.Bucket([]byte(ingredientBucketName))
+		return b.load(ingredientsBkt, ingredientID, &ingredient)
+	})
+	return ingredient, err
 }
 
 func (b *BoltDB) GetIngredients() ([]store.Ingredient, error) {
-	// TODO
-	return []store.Ingredient{}, nil
+	var ingredients []store.Ingredient
+
+	err := b.db.View(func(tx *bolt.Tx) error {
+		var err error
+		ingredientsBkt := tx.Bucket([]byte(ingredientBucketName))
+		ingredients, err = b.loadAllIngredients(ingredientsBkt)
+		return err
+	})
+	return ingredients, err
 }
 
 func (b *BoltDB) FindIngredients(ingredientID string) ([]store.Ingredient, error) {
@@ -196,4 +207,21 @@ func (b *BoltDB) load(bkt *bolt.Bucket, key string, res interface{}) error {
 		return errors.Wrap(err, "failed to unmarshal")
 	}
 	return nil
+}
+
+// load and unmarshal all json value from bucket. Should run in view tx
+func (b *BoltDB) loadAllIngredients(bkt *bolt.Bucket) ([]store.Ingredient, error) {
+	ingredients := []store.Ingredient{}
+	err := bkt.ForEach(func(k, v []byte) error {
+		ingredient := store.Ingredient{}
+
+		if err := json.Unmarshal(v, &ingredient); err != nil {
+			return errors.Wrap(err, "failed to unmarshal")
+		}
+
+		ingredients = append(ingredients, ingredient)
+		return nil
+	})
+
+	return ingredients, err
 }

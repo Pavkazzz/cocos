@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	log "github.com/go-pkgz/lgr"
 	"github.com/pavkazzz/cocos/backend/app/rest"
@@ -72,4 +73,16 @@ func (p *public) getIngredientListCtrl(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, ingredients)
+}
+
+// GET /ingredient/:id - get single ingredient
+func (p *public) getIngredientCtrl(w http.ResponseWriter, r *http.Request) {
+	ingredient, err := p.dataService.GetIngredient(chi.URLParam(r, "id"))
+	if err != nil {
+		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "invalid ingredient", rest.ErrValidation)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, ingredient)
 }

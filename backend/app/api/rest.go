@@ -88,6 +88,8 @@ func (s *Rest) routes() chi.Router {
 
 		ropen.Post("/ingredients", s.pubRest.createIngredientsCtrl)
 		ropen.Get("/ingredients", s.pubRest.getIngredientListCtrl)
+		ropen.Get("/ingredients/{id}", s.pubRest.getIngredientCtrl)
+
 	})
 
 	// user api routes
