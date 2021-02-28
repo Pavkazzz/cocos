@@ -9,8 +9,8 @@ import (
 
 	"github.com/didip/tollbooth/v6"
 	"github.com/didip/tollbooth_chi"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	log "github.com/go-pkgz/lgr"
 	"github.com/go-pkgz/rest/logger"
@@ -18,6 +18,7 @@ import (
 	"github.com/pavkazzz/cocos/backend/app/store"
 	"github.com/pavkazzz/cocos/backend/app/store/service"
 )
+
 
 const hardBodyLimit = 1024 * 64 // limit size of body
 
