@@ -91,6 +91,8 @@ func (s *Rest) routes() chi.Router {
 		ropen.Get("/ingredients", s.pubRest.getIngredientListCtrl)
 		ropen.Get("/ingredients/{id}", s.pubRest.getIngredientCtrl)
 
+		ropen.Get("/search", s.pubRest.getSearchCtrl)
+
 	})
 
 	// user api routes
